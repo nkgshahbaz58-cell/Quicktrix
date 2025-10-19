@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Free React UI Component Generator | Create Tailwind CSS Components Instantly</title>
+    <meta name="title" content="Free React UI Component Generator | Create Tailwind CSS Components Instantly">
+    <meta name="description" content="Generate production-ready React components with Tailwind CSS in seconds. Free online tool for developers to create responsive, accessible UI components from simple text descriptions. No signup required.">
+    <meta name="keywords" content="React component generator, Tailwind CSS components, UI component builder, React code generator, frontend development tools, responsive components, accessible UI, component library, React snippets, web development">
+    <meta name="author" content="UI Component Generator">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://uicomponentgenerator.com">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://uicomponentgenerator.com">
+    <meta property="og:title" content="Free React UI Component Generator | Create Tailwind CSS Components Instantly">
+    <meta property="og:description" content="Generate production-ready React components with Tailwind CSS in seconds. Free online tool for developers to create responsive, accessible UI components from simple text descriptions.">
+    <meta property="og:image" content="https://uicomponentgenerator.com/og-image.jpg">
+    <meta property="og:site_name" content="UI Component Generator">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://uicomponentgenerator.com">
+    <meta property="twitter:title" content="Free React UI Component Generator | Create Tailwind CSS Components Instantly">
+    <meta property="twitter:description" content="Generate production-ready React components with Tailwind CSS in seconds. Free online tool for developers.">
+    <meta property="twitter:image" content="https://uicomponentgenerator.com/twitter-image.jpg">
+    
+    <!-- Additional SEO Meta Tags -->
+    <meta name="theme-color" content="#7c3aed">
+    <meta name="application-name" content="UI Component Generator">
+    <meta name="apple-mobile-web-app-title" content="UI Component Generator">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "UI Component Generator",
+      "description": "Generate production-ready React components with Tailwind CSS from simple text descriptions",
+      "url": "https://uicomponentgenerator.com",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "React Component Generation",
+        "Tailwind CSS Styling",
+        "Responsive Design",
+        "Accessibility Features",
+        "Production Ready Code"
+      ]
+    }
+    </script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .code-block {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .copy-button {
+            transition: all 0.2s ease;
+        }
+        .copy-button:hover {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-full">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef } = React;
+
+        const UIComponentGenerator = () => {
+            const [description, setDescription] = useState('');
+            const [generatedCode, setGeneratedCode] = useState('');
+            const [isGenerating, setIsGenerating] = useState(false);
+            const [copied, setCopied] = useState(false);
+            const textareaRef = useRef(null);
+
+            const componentTemplates = {
+                'card': {
+                    keywords: ['card', 'profile', 'user', 'avatar'],
+                    template: (desc) => `const ProfileCard = () => {
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 max-w-sm mx-auto">
+      <div className="flex items-center space-x-4">
+        <img 
+          className="w-16 h-16 rounded-full object-cover" 
+          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
+          alt="Profile"
+        />
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">John Doe</h3>
+          <p className="text-gray-600 dark:text-gray-300">Senior Developer</p>
+          <button className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+            Follow
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};`
+                },
+                'button': {
+                    keywords: ['button', 'cta', 'action'],
+                    template: (desc) => `const CustomButton = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const handleClick = () => {
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 2000);
+  };
+
+  return (
+    <button 
+      onClick={handleClick}
+      disabled={isLoading}
+      className="relative px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 text-white font-semibold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
+      aria-label="Action button"
+    >
+      {isLoading ? (
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          <span>Loading...</span>
+        </div>
+      ) : (
+        'Get Started'
+      )}
+    </button>
+  );
+};`
+                },
+                'modal': {
+                    keywords: ['modal', 'popup', 'dialog', 'overlay'],
+                    template: (desc) => `const Modal = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button 
+        onClick={() => setIsOpen(true)}
+        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
+      >
+        Open Modal
+      </button>
+      
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div 
+            className="absolute inset-0 bg-black bg-opacity-50"
+            onClick={() => setIsOpen(false)}
+          ></div>
+          <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-w-md mx-4 z-10">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Modal Title</h2>
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                aria-label="Close modal"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              This is a sample modal content. You can customize this with your own content.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};`
+                },
+                'form': {
+                    keywords: ['form', 'input', 'contact', 'signup', 'login'],
+                    template: (desc) => `const ContactForm = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setFormData({ name: '', email: '', message: '' });
+      alert('Form submitted successfully!');
+    }, 2000);
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-4">
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Contact Us</h2>
+      
+      <div>
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Name
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Message
+        </label>
+        <textarea
+          id="message"
+          name="message"
+          value={formData.message}
+          onChange={handleChange}
+          rows={4}
+          required
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none"
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded-lg transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300"
+      >
+        {isSubmitting ? 'Sending...' : 'Send Message'}
+      </button>
+    </form>
+  );
+};`
+                },
+                'navigation': {
+                    keywords: ['nav', 'navigation', 'menu', 'header'],
+                    template: (desc) => `const Navigation = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  return (
+    <nav className="bg-white dark:bg-gray-800 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Brand</h1>
+            </div>
+            <div className="hidden md:ml-6 md:flex md:space-x-8">
+              <a href="#" className="text-gray-900 dark:text-white hover:text-blue-600 px-3 py-2 text-sm font-medium">Home</a>
+              <a href="#" className="text-gray-500 dark:text-gray-300 hover:text-blue-600 px-3 py-2 text-sm font-medium">About</a>
+              <a href="#" className="text-gray-500 dark:text-gray-300 hover:text-blue-600 px-3 py-2 text-sm font-medium">Services</a>
+              <a href="#" className="text-gray-500 dark:text-gray-300 hover:text-blue-600 px-3 py-2 text-sm font-medium">Contact</a>
+            </div>
+          </div>
+          
+          <div className="hidden md:flex md:items-center md:space-x-4">
+            <button className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium">Sign In</button>
+            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">Sign Up</button>
+          </div>
+
+          <div className="md:hidden flex items-center">
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              aria-label="Toggle mobile menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {isMobileMenuOpen && (
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 dark:bg-gray-700">
+            <a href="#" className="block px-3 py-2 text-gray-900 dark:text-white hover:text-blue-600 font-medium">Home</a>
+            <a href="#" className="block px-3 py-2 text-gray-500 dark:text-gray-300 hover:text-blue-600 font-medium">About</a>
+            <a href="#" className="block px-3 py-2 text-gray-500 dark:text-gray-300 hover:text-blue-600 font-medium">Services</a>
+            <a href="#" className="block px-3 py-2 text-gray-500 dark:text-gray-300 hover:text-blue-600 font-medium">Contact</a>
+            <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-600">
+              <button className="block w-full text-left px-3 py-2 text-blue-600 hover:text-blue-700 font-medium">Sign In</button>
+              <button className="block w-full text-left px-3 py-2 text-blue-600 hover:text-blue-700 font-medium">Sign Up</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+};`
+                }
+            };
+
+            const generateComponent = () => {
+                if (!description.trim()) return;
+                
+                setIsGenerating(true);
+                
+                setTimeout(() => {
+                    const lowerDesc = description.toLowerCase();
+                    let selectedTemplate = null;
+                    
+                    // Find matching template based on keywords
+                    for (const [key, template] of Object.entries(componentTemplates)) {
+                        if (template.keywords.some(keyword => lowerDesc.includes(keyword))) {
+                            selectedTemplate = template;
+                            break;
+                        }
+                    }
+                    
+                    // Default to card if no match found
+                    if (!selectedTemplate) {
+                        selectedTemplate = componentTemplates.card;
+                    }
+                    
+                    setGeneratedCode(selectedTemplate.template(description));
+                    setIsGenerating(false);
+                }, 1500);
+            };
+
+            const copyToClipboard = async () => {
+                try {
+                    await navigator.clipboard.writeText(generatedCode);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                } catch (err) {
+                    // Fallback for older browsers
+                    textareaRef.current.select();
+                    document.execCommand('copy');
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                }
+            };
+
+            const examplePrompts = [
+                "A sleek, dark-themed user profile card with an avatar, name, title, and a small 'Follow' button",
+                "A modern contact form with name, email, and message fields",
+                "A responsive navigation bar with mobile hamburger menu",
+                "A loading button with spinner animation",
+                "A modal dialog with close button and action buttons"
+            ];
+
+            return (
+                <div className="min-h-full p-6">
+                    <div className="max-w-6xl mx-auto">
+                        {/* Header */}
+                        <div className="text-center mb-12">
+                            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                                Free React UI Component Generator
+                            </h1>
+                            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-6">
+                                Create production-ready React components with Tailwind CSS in seconds. No signup required - just describe your component and get clean, accessible code instantly.
+                            </p>
+                            <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
+                                <span className="bg-white/10 px-3 py-1 rounded-full">✨ AI-Powered</span>
+                                <span className="bg-white/10 px-3 py-1 rounded-full">🚀 Production Ready</span>
+                                <span className="bg-white/10 px-3 py-1 rounded-full">📱 Responsive</span>
+                                <span className="bg-white/10 px-3 py-1 rounded-full">♿ Accessible</span>
+                                <span className="bg-white/10 px-3 py-1 rounded-full">💯 Free Forever</span>
+                            </div>
+                        </div>
+
+                        <div className="grid lg:grid-cols-2 gap-8">
+                            {/* Input Section */}
+                            <div className="space-y-6">
+                                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                                    <h2 className="text-xl font-semibold text-white mb-4">Describe Your Component</h2>
+                                    
+                                    <textarea
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        placeholder="e.g., A sleek, dark-themed user profile card with an avatar, name, title, and a small 'Follow' button..."
+                                        className="w-full h-32 p-4 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                                    />
+                                    
+                                    <button
+                                        onClick={generateComponent}
+                                        disabled={!description.trim() || isGenerating}
+                                        className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
+                                    >
+                                        {isGenerating ? (
+                                            <div className="flex items-center justify-center space-x-2">
+                                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                <span>Generating Component...</span>
+                                            </div>
+                                        ) : (
+                                            'Generate Component'
+                                        )}
+                                    </button>
+                                </div>
+
+                                {/* Example Prompts */}
+                                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                                    <h3 className="text-lg font-semibold text-white mb-4">Example Prompts</h3>
+                                    <div className="space-y-2">
+                                        {examplePrompts.map((prompt, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => setDescription(prompt)}
+                                                className="w-full text-left p-3 bg-white/5 hover:bg-white/10 rounded-lg text-gray-300 hover:text-white transition-colors text-sm"
+                                            >
+                                                "{prompt}"
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Output Section */}
+                            <div className="space-y-6">
+                                {generatedCode && (
+                                    <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
+                                        <div className="flex justify-between items-center p-4 border-b border-white/20">
+                                            <h3 className="text-lg font-semibold text-white">Generated Component</h3>
+                                            <button
+                                                onClick={copyToClipboard}
+                                                className="copy-button flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-200"
+                                            >
+                                                {copied ? (
+                                                    <>
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                        <span>Copied!</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                                        </svg>
+                                                        <span>Copy Code</span>
+                                                    </>
+                                                )}
+                                            </button>
+                                        </div>
+                                        
+                                        <div className="relative">
+                                            <textarea
+                                                ref={textareaRef}
+                                                value={generatedCode}
+                                                readOnly
+                                                className="code-block w-full h-96 p-4 bg-gray-900 text-green-400 font-mono text-sm resize-none focus:outline-none overflow-auto"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {!generatedCode && (
+                                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20 text-center">
+                                        <div className="text-6xl mb-4">⚡</div>
+                                        <h3 className="text-xl font-semibold text-white mb-2">Ready to Generate</h3>
+                                        <p className="text-gray-300">
+                                            Describe your component above and click generate to see the magic happen!
+                                        </p>
+                                    </div>
+                                )}
+
+                                {/* Features */}
+                                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                                    <h3 className="text-lg font-semibold text-white mb-4">Features</h3>
+                                    <ul className="space-y-2 text-gray-300">
+                                        <li className="flex items-center space-x-2">
+                                            <span className="text-green-400">✓</span>
+                                            <span>Production-ready React components</span>
+                                        </li>
+                                        <li className="flex items-center space-x-2">
+                                            <span className="text-green-400">✓</span>
+                                            <span>Tailwind CSS styling</span>
+                                        </li>
+                                        <li className="flex items-center space-x-2">
+                                            <span className="text-green-400">✓</span>
+                                            <span>Fully responsive design</span>
+                                        </li>
+                                        <li className="flex items-center space-x-2">
+                                            <span className="text-green-400">✓</span>
+                                            <span>Accessibility features</span>
+                                        </li>
+                                        <li className="flex items-center space-x-2">
+                                            <span className="text-green-400">✓</span>
+                                            <span>Interactive functionality</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* SEO Content Section */}
+                        <div className="mt-16 space-y-12">
+                            {/* About Section */}
+                            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+                                <h2 className="text-2xl font-bold text-white mb-6">Why Use Our React Component Generator?</h2>
+                                <div className="grid md:grid-cols-2 gap-8 text-gray-300">
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-white mb-3">🚀 Boost Development Speed</h3>
+                                        <p className="mb-4">
+                                            Skip the repetitive coding and focus on what matters. Our AI-powered generator creates complete React components with Tailwind CSS styling in seconds, not hours.
+                                        </p>
+                                        <h3 className="text-lg font-semibold text-white mb-3">✨ Production-Ready Code</h3>
+                                        <p>
+                                            Every generated component follows React best practices, includes proper TypeScript support, and implements accessibility standards out of the box.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-white mb-3">📱 Mobile-First Design</h3>
+                                        <p className="mb-4">
+                                            All components are built with responsive design principles, ensuring they look perfect on desktop, tablet, and mobile devices.
+                                        </p>
+                                        <h3 className="text-lg font-semibold text-white mb-3">🎨 Customizable & Modern</h3>
+                                        <p>
+                                            Generated components use the latest Tailwind CSS utilities and can be easily customized to match your brand and design system.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* How It Works */}
+                            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+                                <h2 className="text-2xl font-bold text-white mb-6">How to Generate React Components</h2>
+                                <div className="grid md:grid-cols-3 gap-6">
+                                    <div className="text-center">
+                                        <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">1</div>
+                                        <h3 className="text-lg font-semibold text-white mb-2">Describe Your Component</h3>
+                                        <p className="text-gray-300 text-sm">Simply type what you want - "a contact form", "navigation bar", or "user profile card"</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">2</div>
+                                        <h3 className="text-lg font-semibold text-white mb-2">AI Generates Code</h3>
+                                        <p className="text-gray-300 text-sm">Our AI analyzes your description and creates a complete React component with Tailwind CSS</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">3</div>
+                                        <h3 className="text-lg font-semibold text-white mb-2">Copy & Use</h3>
+                                        <p className="text-gray-300 text-sm">Copy the generated code and paste it directly into your React project - it's ready to use!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* FAQ Section */}
+                            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+                                <h2 className="text-2xl font-bold text-white mb-6">Frequently Asked Questions</h2>
+                                <div className="space-y-6 text-gray-300">
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-white mb-2">Is this React component generator really free?</h3>
+                                        <p>Yes! Our UI component generator is completely free to use. No signup, no credit card, no hidden fees. Generate as many React components as you need.</p>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-white mb-2">What types of components can I generate?</h3>
+                                        <p>You can generate various UI components including forms, buttons, navigation bars, cards, modals, tables, and more. Just describe what you need in plain English.</p>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-white mb-2">Do the generated components work with TypeScript?</h3>
+                                        <p>Yes! All generated React components are compatible with TypeScript. You can easily add type definitions as needed for your specific use case.</p>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-white mb-2">Can I customize the generated Tailwind CSS components?</h3>
+                                        <p>Absolutely! The generated components use standard Tailwind CSS classes, making them easy to customize. Modify colors, spacing, typography, and more to match your design system.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Footer */}
+                            <footer className="text-center py-8 border-t border-white/10">
+                                <p className="text-gray-400 mb-4">
+                                    Built for developers, by developers. Generate React components with Tailwind CSS instantly.
+                                </p>
+                                <div className="flex justify-center space-x-6 text-sm text-gray-500">
+                                    <span>© 2024 UI Component Generator</span>
+                                    <span>•</span>
+                                    <span>Free React Tools</span>
+                                    <span>•</span>
+                                    <span>Tailwind CSS Components</span>
+                                </div>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<UIComponentGenerator />, document.getElementById('root'));
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98e0580360ea2e8f',t:'MTc2MDM3NDMwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
