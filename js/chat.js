@@ -115,11 +115,19 @@ async function initEngine(modelId) {
     const tipInterval = startTipRotation();
 
     try {
-        engine = new webllm.MLCEngine();
+        // Clear caches to prevent any corrupted shards from causing NetworkErrors
+        try {
+            const cacheNames = await caches.keys();
+            for (const name of cacheNames) {
+                if (name.includes('webllm')) {
+                    await caches.delete(name);
+                }
+            }
+        } catch (e) {
+            console.warn('[QUANTUM.AI] Could not clear caches:', e);
+        }
 
-        await engine.reload(modelId, {
-            temperature: 0.7,
-            top_p: 0.9,
+        engine = await webllm.CreateMLCEngine(modelId, {
             initProgressCallback: (report) => {
                 const text = report.text || '';
                 loadingStage.textContent = text;
@@ -132,11 +140,10 @@ async function initEngine(modelId) {
                     progressText.textContent = pct + '%';
                 }
 
-                // Update stage-specific messages
                 if (text.toLowerCase().includes('fetch')) {
                     loadingStage.textContent = '📥 Downloading model weights...';
                 } else if (text.toLowerCase().includes('load')) {
-                    loadingStage.textContent = '🧠 Loading model into GPU memory...';
+                    loadingStage.textContent = '🧠 Loading model into memory...';
                 } else if (text.toLowerCase().includes('compile') || text.toLowerCase().includes('shader')) {
                     loadingStage.textContent = '⚡ Compiling GPU shaders...';
                 }
