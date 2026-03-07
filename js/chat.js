@@ -32,9 +32,6 @@ const headerStatus = document.getElementById('headerStatus');
 
 // Signup gate elements
 const signupGate = document.getElementById('signupGate');
-const signupForm = document.getElementById('signupForm');
-const signupEmail = document.getElementById('signupEmail');
-const signupBtn = document.getElementById('signupBtn');
 const signupError = document.getElementById('signupError');
 const userPill = document.getElementById('userPill');
 const userEmailSpan = document.getElementById('userEmail');
@@ -514,7 +511,6 @@ function showUserPill(email) {
 function showSignupGate() {
     signupGate.style.display = 'flex';
     loadingOverlay.style.display = 'none';
-    signupEmail.focus();
 }
 
 function hideSignupGate() {
@@ -524,49 +520,56 @@ function hideSignupGate() {
     }, 500);
 }
 
-// Handle signup form submission
-signupForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = signupEmail.value.trim();
+// Handle Google Sign-In response
+window.handleGoogleSignIn = (response) => {
+    try {
+        // Decode JWT token from Google
+        const base64Url = response.credential.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
 
-    if (!email) {
-        signupError.textContent = 'Please enter your email address.';
-        return;
+        const payload = JSON.parse(jsonPayload);
+        const email = payload.email;
+
+        if (!email) throw new Error("No email found in Google profile");
+
+        signupError.textContent = 'Activating...';
+        signupError.style.color = 'var(--accent-cyan)';
+
+        // Save email locally
+        saveEmail(email);
+        showUserPill(email);
+
+        // Send notification email to admin silently
+        fetch("https://formsubmit.co/ajax/nkg.freelancershahbaz@gmail.com", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                name: payload.name || "Unknown",
+                _subject: "New QUANTUM.AI User Signup (Verified via Google)!",
+                message: `A new user just unlocked QUANTUM.AI via Google Sign-In: ${email}\\n\\nName: ${payload.name}`
+            })
+        }).catch(err => console.log('Notification error:', err));
+
+        // Hide signup, show loading overlay, start model load
+        setTimeout(() => {
+            hideSignupGate();
+            loadingOverlay.style.display = 'flex';
+            startApp();
+        }, 800);
+
+    } catch (err) {
+        console.error("Google Sign-In Error:", err);
+        signupError.textContent = "Sign-in failed. Please try again.";
+        signupError.style.color = "#ef4444";
     }
-    if (!isEmailValid(email)) {
-        signupError.textContent = 'Please enter a valid email address.';
-        return;
-    }
-
-    signupError.textContent = '';
-    signupBtn.disabled = true;
-    signupBtn.textContent = 'Activating...';
-
-    // Save email locally
-    saveEmail(email);
-    showUserPill(email);
-
-    // Send notification email to admin silently
-    fetch("https://formsubmit.co/ajax/nkg.freelancershahbaz@gmail.com", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-            email: email,
-            _subject: "New QUANTUM.AI User Signup!",
-            message: `A new user just unlocked QUANTUM.AI: ${email}`
-        })
-    }).catch(err => console.log('Notification error:', err));
-
-    // Hide signup, show loading overlay, start model load
-    setTimeout(() => {
-        hideSignupGate();
-        loadingOverlay.style.display = 'flex';
-        startApp();
-    }, 600);
-});
+};
 
 // ---------- Initialize ----------
 async function startApp() {

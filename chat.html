@@ -9,6 +9,8 @@
         content="Chat with QUANTUM.AI — a real AI language model running entirely in your browser. No API keys, no data leaves your device.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="assets/logo.png" type="image/png">
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body>
@@ -24,14 +26,21 @@
                 Enter your email to get <strong>unlimited access</strong> to a real AI coding assistant running entirely
                 in your browser.
             </p>
-            <form class="signup-form" id="signupForm">
-                <div class="signup-input-group">
-                    <input type="email" class="signup-email-input" id="signupEmail" placeholder="you@example.com"
-                        required autocomplete="email">
-                    <button type="submit" class="signup-submit-btn" id="signupBtn">Get Access →</button>
+            <div class="signup-form" id="signupForm" style="display:flex; flex-direction:column; align-items:center;">
+                <!-- Google Sign-In -->
+                <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID_HERE" data-context="signin"
+                    data-ux_mode="popup" data-callback="handleGoogleSignIn" data-auto_prompt="false">
                 </div>
-                <p class="signup-error" id="signupError"></p>
-            </form>
+                <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="filled_black"
+                    data-text="signin_with" data-size="large" data-logo_alignment="left">
+                </div>
+                <p class="signup-error" id="signupError" style="margin-top: 15px;"></p>
+                <div
+                    style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; padding: 10px; background: rgba(255,100,100,0.1); border-radius: 8px;">
+                    ⚠️ Note: You must replace <code>YOUR_GOOGLE_CLIENT_ID_HERE</code> inside <code>chat.html</code> with
+                    your actual Google Cloud Client ID for sign-in to work.
+                </div>
+            </div>
             <div class="signup-trust">
                 <div class="signup-trust-item">
                     <span class="signup-trust-icon">🔒</span>
