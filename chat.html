@@ -6,13 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QUANTUM.AI — Chat</title>
     <meta name="description"
-        content="Chat with QUANTUM.AI — get instant answers to your coding questions with clear explanations and working code snippets.">
+        content="Chat with QUANTUM.AI — a real AI language model running entirely in your browser. No API keys, no data leaves your device.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="assets/logo.png" type="image/png">
 </head>
 
 <body>
-    <div class="chat-layout">
+
+    <!-- WebGPU Warning (hidden by default, shown if WebGPU unavailable) -->
+    <div class="webgpu-warning" id="webgpuWarning" style="display:none;">
+        <div class="webgpu-warning-content">
+            <div class="webgpu-warning-icon">⚠️</div>
+            <h2 class="webgpu-warning-title">WebGPU Required</h2>
+            <p class="webgpu-warning-text">
+                QUANTUM.AI runs a real AI model directly in your browser using WebGPU.
+                Your current browser doesn't support WebGPU. Please use one of these:
+            </p>
+            <div class="webgpu-warning-browsers">
+                <div class="webgpu-browser">
+                    <div class="webgpu-browser-icon">🌐</div>
+                    Chrome 113+
+                </div>
+                <div class="webgpu-browser">
+                    <div class="webgpu-browser-icon">🔷</div>
+                    Edge 113+
+                </div>
+            </div>
+            <a href="index.html" class="btn-primary"><span>← Back to Home</span></a>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <img src="assets/logo.png" alt="QUANTUM.AI">
+            </div>
+            <h2 class="loading-title">Initializing <span class="glow-text">QUANTUM.AI</span></h2>
+            <p class="loading-stage" id="loadingStage">Checking WebGPU support...</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <p class="progress-text" id="progressText">0%</p>
+            <div class="loading-tip" id="loadingTip">
+                💡 First load downloads the AI model (~900MB). It's cached for instant loads after that.
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Layout -->
+    <div class="chat-layout" id="chatLayout" style="display:none;">
 
         <!-- Sidebar -->
         <aside class="chat-sidebar" id="chatSidebar">
@@ -26,14 +69,13 @@
                 </button>
             </div>
 
-            <div class="sidebar-chats" id="sidebarChats">
-                <!-- Chat history items will be injected by JS -->
-            </div>
+            <div class="sidebar-chats" id="sidebarChats"></div>
 
             <div class="sidebar-footer">
-                <a href="index.html" class="sidebar-home-link">
-                    ← Back to Home
-                </a>
+                <a href="index.html" class="sidebar-home-link">← Back to Home</a>
+                <div class="powered-badge" style="margin-top: 8px;">
+                    🧠 Powered by WebGPU — runs locally
+                </div>
             </div>
         </aside>
 
@@ -41,42 +83,55 @@
         <main class="chat-main">
             <header class="chat-header">
                 <div class="chat-header-info">
-                    <button class="mobile-sidebar-toggle" id="mobileSidebarToggle" aria-label="Toggle sidebar">
-                        ☰
-                    </button>
+                    <button class="mobile-sidebar-toggle" id="mobileSidebarToggle"
+                        aria-label="Toggle sidebar">☰</button>
                     <h1 class="chat-header-title">QUANTUM.AI</h1>
                     <div class="chat-header-status">
                         <span class="status-dot"></span>
-                        Online
+                        <span id="headerStatus">Online</span>
                     </div>
+                </div>
+                <div class="model-selector-group">
+                    <span class="model-badge" id="modelBadge">
+                        <span id="modelBadgeText">Loading...</span>
+                    </span>
+                    <select class="model-selector" id="modelSelector" title="Select AI model">
+                        <option value="Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC">Qwen2.5-Coder-1.5B</option>
+                        <option value="SmolLM2-1.7B-Instruct-q4f16_1-MLC">SmolLM2-1.7B</option>
+                        <option value="Llama-3.2-1B-Instruct-q4f16_1-MLC">Llama-3.2-1B</option>
+                        <option value="Phi-3.5-mini-instruct-q4f16_1-MLC">Phi-3.5-mini</option>
+                    </select>
                 </div>
             </header>
 
             <!-- Messages -->
             <div class="chat-messages" id="chatMessages">
-                <!-- Welcome Screen (shown when no messages) -->
                 <div class="chat-welcome" id="chatWelcome">
                     <div class="welcome-icon"><img src="assets/logo.png" alt="QUANTUM.AI" class="welcome-logo-img">
                     </div>
                     <h2 class="welcome-title">Hi, I'm <span class="glow-text">QUANTUM.AI</span></h2>
-                    <p class="welcome-subtitle">I'm here to help you with your coding questions. Try one of these to get
-                        started:</p>
+                    <p class="welcome-subtitle">I'm a real AI model running entirely in your browser. Ask me anything
+                        about coding!</p>
                     <div class="welcome-suggestions" id="welcomeSuggestions">
-                        <button class="suggestion-chip" data-query="How do I write a for loop in Python?">
-                            <div class="suggestion-chip-icon">🐍</div>
-                            How do I write a for loop in Python?
-                        </button>
-                        <button class="suggestion-chip" data-query="What is async/await in JavaScript?">
+                        <button class="suggestion-chip"
+                            data-query="Explain how async/await works in JavaScript with an example">
                             <div class="suggestion-chip-icon">⚡</div>
-                            What is async/await in JavaScript?
+                            Explain async/await in JavaScript
                         </button>
-                        <button class="suggestion-chip" data-query="How do I center a div in CSS?">
+                        <button class="suggestion-chip"
+                            data-query="Write a Python function to check if a string is a palindrome">
+                            <div class="suggestion-chip-icon">🐍</div>
+                            Python palindrome checker
+                        </button>
+                        <button class="suggestion-chip"
+                            data-query="What's the difference between flexbox and CSS grid? When should I use each?">
                             <div class="suggestion-chip-icon">🎨</div>
-                            How do I center a div in CSS?
+                            Flexbox vs CSS Grid
                         </button>
-                        <button class="suggestion-chip" data-query="What is a SQL JOIN?">
+                        <button class="suggestion-chip"
+                            data-query="Explain SQL JOINs with a simple example using two tables">
                             <div class="suggestion-chip-icon">🗃️</div>
-                            What is a SQL JOIN?
+                            SQL JOINs explained
                         </button>
                     </div>
                 </div>
@@ -86,24 +141,21 @@
             <div class="chat-input-area">
                 <div class="chat-input-wrapper">
                     <input type="text" class="chat-input" id="chatInput" placeholder="Ask me a coding question..."
-                        maxlength="500" autocomplete="off">
-                    <span class="chat-char-count" id="charCount">0/500</span>
-                    <button class="chat-send-btn" id="sendBtn" disabled aria-label="Send message">
-                        ➤
-                    </button>
+                        maxlength="1000" autocomplete="off" disabled>
+                    <span class="chat-char-count" id="charCount">0/1000</span>
+                    <button class="chat-send-btn" id="sendBtn" disabled aria-label="Send message">➤</button>
                 </div>
-                <p class="chat-disclaimer">QUANTUM.AI V1 — Independent AI by Antigravity. No external APIs.</p>
+                <p class="chat-disclaimer">QUANTUM.AI V2 — Real AI running in your browser via WebGPU. No data leaves
+                    your device.</p>
             </div>
         </main>
     </div>
 
     <!-- Sidebar overlay for mobile -->
-    <div id="sidebarOverlay" style="
-    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
-    z-index:50;
-  "></div>
+    <div id="sidebarOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:50;">
+    </div>
 
-    <script src="js/chat.js"></script>
+    <script type="module" src="js/chat.js"></script>
 </body>
 
 </html>
