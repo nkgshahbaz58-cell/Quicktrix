@@ -13,6 +13,46 @@
 
 <body>
 
+    <!-- Email Signup Gate -->
+    <div class="signup-gate" id="signupGate" style="display:none;">
+        <div class="signup-card">
+            <div class="signup-logo">
+                <img src="assets/logo.png" alt="QUANTUM.AI">
+            </div>
+            <h2 class="signup-title">Unlock <span class="glow-text">QUANTUM.AI</span></h2>
+            <p class="signup-subtitle">
+                Enter your email to get <strong>unlimited access</strong> to a real AI coding assistant running entirely
+                in your browser.
+            </p>
+            <form class="signup-form" id="signupForm">
+                <div class="signup-input-group">
+                    <input type="email" class="signup-email-input" id="signupEmail" placeholder="you@example.com"
+                        required autocomplete="email">
+                    <button type="submit" class="signup-submit-btn" id="signupBtn">Get Access →</button>
+                </div>
+                <p class="signup-error" id="signupError"></p>
+            </form>
+            <div class="signup-trust">
+                <div class="signup-trust-item">
+                    <span class="signup-trust-icon">🔒</span>
+                    No spam ever
+                </div>
+                <div class="signup-trust-item">
+                    <span class="signup-trust-icon">🧠</span>
+                    100% private
+                </div>
+                <div class="signup-trust-item">
+                    <span class="signup-trust-icon">💎</span>
+                    Free forever
+                </div>
+            </div>
+            <p class="signup-footer">
+                By signing up you agree to our terms. Your data stays on your device.<br>
+                Built by <span class="glow-text">Antigravity</span>
+            </p>
+        </div>
+    </div>
+
     <!-- WebGPU Warning (hidden by default, shown if WebGPU unavailable) -->
     <div class="webgpu-warning" id="webgpuWarning" style="display:none;">
         <div class="webgpu-warning-content">
@@ -72,6 +112,10 @@
             <div class="sidebar-chats" id="sidebarChats"></div>
 
             <div class="sidebar-footer">
+                <div class="user-pill" id="userPill" style="display:none;">
+                    <span class="user-pill-icon">👤</span>
+                    <span id="userEmail"></span>
+                </div>
                 <a href="index.html" class="sidebar-home-link">← Back to Home</a>
                 <div class="powered-badge" style="margin-top: 8px;">
                     🧠 Powered by WebGPU — runs locally

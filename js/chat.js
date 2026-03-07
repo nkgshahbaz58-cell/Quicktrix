@@ -30,6 +30,15 @@ const modelBadge = document.getElementById('modelBadge');
 const modelBadgeText = document.getElementById('modelBadgeText');
 const headerStatus = document.getElementById('headerStatus');
 
+// Signup gate elements
+const signupGate = document.getElementById('signupGate');
+const signupForm = document.getElementById('signupForm');
+const signupEmail = document.getElementById('signupEmail');
+const signupBtn = document.getElementById('signupBtn');
+const signupError = document.getElementById('signupError');
+const userPill = document.getElementById('userPill');
+const userEmailSpan = document.getElementById('userEmail');
+
 // ---------- State ----------
 let engine = null;
 let conversations = {};
@@ -473,12 +482,90 @@ modelSelector.addEventListener('change', async () => {
     await initEngine(newModel);
 });
 
+// ---------- Email Signup Gate ----------
+const STORAGE_KEY = 'quantum_ai_user_email';
+
+function isEmailValid(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function getSavedEmail() {
+    return localStorage.getItem(STORAGE_KEY);
+}
+
+function saveEmail(email) {
+    localStorage.setItem(STORAGE_KEY, email);
+}
+
+function showUserPill(email) {
+    if (userPill && userEmailSpan) {
+        userEmailSpan.textContent = email;
+        userPill.style.display = 'flex';
+    }
+}
+
+function showSignupGate() {
+    signupGate.style.display = 'flex';
+    loadingOverlay.style.display = 'none';
+    signupEmail.focus();
+}
+
+function hideSignupGate() {
+    signupGate.classList.add('hidden');
+    setTimeout(() => {
+        signupGate.style.display = 'none';
+    }, 500);
+}
+
+// Handle signup form submission
+signupForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = signupEmail.value.trim();
+
+    if (!email) {
+        signupError.textContent = 'Please enter your email address.';
+        return;
+    }
+    if (!isEmailValid(email)) {
+        signupError.textContent = 'Please enter a valid email address.';
+        return;
+    }
+
+    signupError.textContent = '';
+    signupBtn.disabled = true;
+    signupBtn.textContent = 'Activating...';
+
+    // Save email locally
+    saveEmail(email);
+    showUserPill(email);
+
+    // Hide signup, show loading overlay, start model load
+    setTimeout(() => {
+        hideSignupGate();
+        loadingOverlay.style.display = 'flex';
+        startApp();
+    }, 600);
+});
+
 // ---------- Initialize ----------
-async function main() {
+async function startApp() {
     const hasWebGPU = await checkWebGPU();
     if (!hasWebGPU) return;
-
     await initEngine(modelSelector.value);
+}
+
+async function main() {
+    const savedEmail = getSavedEmail();
+
+    if (savedEmail) {
+        // Already signed up — skip gate, load model directly
+        showUserPill(savedEmail);
+        loadingOverlay.style.display = 'flex';
+        await startApp();
+    } else {
+        // Show signup gate first
+        showSignupGate();
+    }
 }
 
 main();
