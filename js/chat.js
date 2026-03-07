@@ -546,6 +546,20 @@ signupForm.addEventListener('submit', (e) => {
     saveEmail(email);
     showUserPill(email);
 
+    // Send notification email to admin silently
+    fetch("https://formsubmit.co/ajax/nkg.freelancershahbaz@gmail.com", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            _subject: "New QUANTUM.AI User Signup!",
+            message: `A new user just unlocked QUANTUM.AI: ${email}`
+        })
+    }).catch(err => console.log('Notification error:', err));
+
     // Hide signup, show loading overlay, start model load
     setTimeout(() => {
         hideSignupGate();
