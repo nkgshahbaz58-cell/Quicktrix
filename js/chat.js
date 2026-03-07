@@ -67,7 +67,7 @@ Response format:
 
 // ---------- Loading Tips ----------
 const loadingTips = [
-    "💡 First load downloads the AI model (~900MB). It's cached for instant loads after that.",
+    "💡 First load downloads the AI model (~200MB). It's cached for instant loads after that.",
     "🧠 The AI model runs entirely on your device's GPU — no data leaves your browser.",
     "🔒 Your conversations are 100% private — nothing is sent to any server.",
     "⚡ WebGPU accelerates AI inference using your graphics card.",
