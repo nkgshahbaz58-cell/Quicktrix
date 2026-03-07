@@ -173,7 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
-        avatar.textContent = role === 'ai' ? '⚛' : '👤';
+        if (role === 'ai') {
+            avatar.innerHTML = '<img src="assets/logo.png" alt="AI" class="avatar-logo-img">';
+        } else {
+            avatar.textContent = '👤';
+        }
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
@@ -195,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         avatar.className = 'message-avatar';
         avatar.style.background = 'linear-gradient(135deg, #7c3aed, #06b6d4)';
         avatar.style.boxShadow = '0 0 15px rgba(124, 58, 237, 0.25)';
-        avatar.textContent = '⚛';
+        avatar.innerHTML = '<img src="assets/logo.png" alt="AI" class="avatar-logo-img">';
 
         const dots = document.createElement('div');
         dots.className = 'typing-dots';
