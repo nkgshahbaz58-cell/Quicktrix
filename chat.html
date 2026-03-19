@@ -35,11 +35,7 @@
                     data-text="signin_with" data-size="large" data-logo_alignment="left">
                 </div>
                 <p class="signup-error" id="signupError" style="margin-top: 15px;"></p>
-                <div
-                    style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; padding: 10px; background: rgba(255,100,100,0.1); border-radius: 8px;">
-                    ⚠️ Note: You must replace <code>a</code> inside <code>chat.html</code> with
-                    your actual Google Cloud Client ID for sign-in to work.
-                </div>
+
             </div>
             <div class="signup-trust">
                 <div class="signup-trust-item">
@@ -207,6 +203,33 @@
     <!-- Sidebar overlay for mobile -->
     <div id="sidebarOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:50;">
     </div>
+
+    <!-- Global Google Sign-In handler (must be non-module so Google can call it) -->
+    <script>
+        function handleGoogleSignIn(response) {
+            try {
+                // Decode the JWT token to get user info
+                const payload = JSON.parse(atob(response.credential.split('.')[1]));
+                const email = payload.email;
+                const name = payload.name || '';
+
+                // Save login state to localStorage
+                localStorage.setItem('user_email', email);
+                localStorage.setItem('user_name', name);
+                localStorage.setItem('signed_in', 'true');
+
+                // Hide the signup gate
+                document.getElementById('signupGate').style.display = 'none';
+
+                // Show the loading overlay so the app initializes
+                document.getElementById('loadingOverlay').style.display = 'flex';
+
+            } catch (e) {
+                console.error('Google Sign-In error:', e);
+                document.getElementById('signupError').textContent = 'Sign-in failed. Please try again.';
+            }
+        }
+    </script>
 
     <script type="module" src="js/chat.js"></script>
 </body>
